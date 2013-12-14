@@ -23,4 +23,9 @@ gem 'faker'
 gem 'devise'
 gem 'cancan'
 gem 'redcarpet'
+gem 'carrierwave'
+gem 'mini_magick'
+gem 'fog'
+gem 'figaro'
+
 
