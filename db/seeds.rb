@@ -1,14 +1,14 @@
 require 'faker'
 
 topics = []
-15.times do
+30.times do
   topics << Topic.create(
     name: Faker::Lorem.words(rand(1..10)).join(" "),
     description: Faker::Lorem.paragraph(rand(1..4))
   )
 end
 
-rand(4..10).times do
+rand(10..20).times do
   password = Faker::Lorem.characters(10)
   u = User.new(
     name: Faker::Name.name,
@@ -23,7 +23,7 @@ rand(4..10).times do
     # The 'skip_confirmation!' method sets the confirmation date
     # to avoid sending an email. The 'save' method updates the database.
 
-  rand(5..12).times do
+  rand(40..50).times do
     topic = topics.first # getting the first topic here
     p = u.posts.create(
       topic: topic,
@@ -70,5 +70,6 @@ u.save
 
 puts "Seed finished"
 puts "#{User.count} users created"
+puts "#{Topic.count} topics created"
 puts "#{Post.count} posts created"
 puts "#{Comment.count} comments created"
