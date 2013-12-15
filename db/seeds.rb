@@ -73,4 +73,5 @@ u.save
 puts "Seed finished"
 puts "#{User.count} users created"
 puts "#{Post.count} posts created"
+puts "#{Topic.count} topics created"
 puts "#{Comment.count} comments created"
