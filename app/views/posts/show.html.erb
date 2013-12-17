@@ -1,6 +1,4 @@
-<h1><%= markdown @post.title %></h1>
-
-<div class="span4">
+<div class="span4 pull-right">
     <% if can? :edit, @post %>
       <%= link_to "Edit", edit_topic_post_path(@topic, @post), class: 'btn btn-large btn-block' %>
     <% end %>
@@ -9,8 +7,18 @@
     <% end %>
 </div>
 
+<div class="span4">
+  <h3><%= pluralize(@post.points, 'point') %></h3>
+    <small>
+      <%= pluralize(@post.up_votes, 'up vote') %>
+      <%= pluralize(@post.down_votes, 'down vote') %>
+    </small>
+</div>
+
 <div class="row">
   <div class="span8">
+    <%= render partial: 'votes/voter', locals: { topic: @topic, post: @post } %>
+    <h1><%= markdown @post.title %></h1>
     <small>
       <%= image_tag(@post.user.avatar.tiny.url) if @post.user.avatar? %>
       submitted <%= time_ago_in_words(@post.created_at) %> ago by <%= @post.user.name %>
