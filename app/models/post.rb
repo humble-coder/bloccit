@@ -6,6 +6,8 @@ class Post < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
   mount_uploader :image, ImageUploader
+  has_many :favorites, dependent: :destroy
+  
 
   def up_votes
     self.votes.where(value: 1).count
