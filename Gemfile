@@ -10,6 +10,11 @@ group :development do
   gem 'sqlite3'
 end
 
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'factory_girl_rails', '~> 4.0'
+end
+
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
@@ -29,6 +34,7 @@ gem 'fog'
 gem 'figaro'
 gem 'will_paginate', '~> 3.0'
 gem 'omniauth-facebook'
+gem 'unf'
 
 
 
