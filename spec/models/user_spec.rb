@@ -43,9 +43,7 @@ describe User do
 
 
   describe ".top_rated" do
-
-    before :each do
-      @u0 = create(:user) do |user|
+    let!(:u0) { create(:user) do |user| 
         post = user.posts.build(attributes_for(:post))
         post.topic = create(:topic)
         post.save
@@ -53,8 +51,9 @@ describe User do
         c.post = post
         c.save
       end
-
-      @u1 = create(:user) do |user|
+    }
+    
+    let!(:u1) { create(:user) do |user| 
         c = user.comments.build(attributes_for(:comment))
         c.post = create(:post)
         c.save
@@ -63,19 +62,19 @@ describe User do
         post.save
         c = user.comments.build(attributes_for(:comment))
         c.post = post
-        c.save      
+        c.save
       end
-    end
+    }
 
     it "should return users based on comments + posts" do
-      User.top_rated.should eq([@u1, @u0])
+      User.top_rated.should eq([u1, u0])
     end
     it "should have 'posts_count' on user" do
       users = User.top_rated
       users.first.posts_count.should eq(1)
     end
     it "should have user with most total posts and comments in the 0th index of top_rated array" do
-      User.top_rated[0].should eq(@u1)
+      User.top_rated[0].should eq(u1)
     end
     it "should have 'comments_count' on user" do
       users = User.top_rated

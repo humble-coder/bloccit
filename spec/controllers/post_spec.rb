@@ -14,23 +14,23 @@ describe PostsController do
   end
 end
 
-describe Topics::PostsController do
+# describe Topics::PostsController do
 
-  describe "Post management" do
-    it "creates a post and redirects to the post's page" do
-      get :new
-      expect(response).to render_template(:new)
+#   describe "Post management" do
+#     it "creates a post and redirects to the post's page" do
+#       get :new
+#       expect(response).to render_template(:new)
 
-      post "/posts", :post => {:id => "1"}
+#       post "/posts", :post => {:id => "1"}
 
-      expect(response).to redirect_to(assigns(:post))
-      follow_redirect!
+#       expect(response).to redirect_to(assigns(:post))
+#       follow_redirect!
 
-      expect(response).to render_template(:show)
-      expect(response.body).to include("Post was saved.")
-    end
-  end
-end
+#       expect(response).to render_template(:show)
+#       expect(response.body).to include("Post was saved.")
+#     end
+#   end
+# end
 
 
 
