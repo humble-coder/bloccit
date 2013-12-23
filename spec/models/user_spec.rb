@@ -47,11 +47,14 @@ describe User do
         post = user.posts.build(attributes_for(:post))
         post.topic = create(:topic)
         post.save
+        post.comments.build
         c = user.comments.build(attributes_for(:comment))
         c.post = post
         c.save
       end
     }
+
+    #let(:post) { build :post, :with_comments }
     
     let!(:u1) { create(:user) do |user| 
         c = user.comments.build(attributes_for(:comment))
