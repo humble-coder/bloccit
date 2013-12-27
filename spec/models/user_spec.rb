@@ -51,33 +51,29 @@ describe User do
 
 
   describe ".top_rated" do
-    # let!(:u0) { create(:user) do |user| 
-    #     post = user.posts.build(attributes_for(:post))
-    #     post.topic = create(:topic)
-    #     post.save
-    #     post.comments.build
-    #     c = user.comments.build(attributes_for(:comment))
-    #     c.post = post
-    #     c.save
-    #   end
-    # }
-    let!(:active_user) { create(:user_with_posts) }
-    let!(:passive_user) { create(:user) }
-
-    #let(:post) { build :post, :with_comments }
+    let!(:passive_user) { create(:user) do |user| 
+        post = user.posts.build(attributes_for(:post))
+        post.topic = create(:topic)
+        post.save
+        post.comments.build
+        c = user.comments.build(attributes_for(:comment))
+        c.post = post
+        c.save
+      end
+    }
     
-    # let!(:u1) { create(:user) do |user| 
-    #     c = user.comments.build(attributes_for(:comment))
-    #     c.post = create(:post)
-    #     c.save
-    #     post = user.posts.build(attributes_for(:post))
-    #     post.topic = create(:topic)
-    #     post.save
-    #     c = user.comments.build(attributes_for(:comment))
-    #     c.post = post
-    #     c.save
-    #   end
-    # }
+    let!(:active_user) { create(:user) do |user| 
+        c = user.comments.build(attributes_for(:comment))
+        c.post = create(:post)
+        c.save
+        post = user.posts.build(attributes_for(:post))
+        post.topic = create(:topic)
+        post.save
+        c = user.comments.build(attributes_for(:comment))
+        c.post = post
+        c.save
+      end
+    }
 
     it "should return users based on comments + posts" do
       User.top_rated.should eq([active_user, passive_user])
@@ -91,7 +87,7 @@ describe User do
     end
     it "should have 'comments_count' on user" do
       users = User.top_rated
-      users.first.comments_count.should eq(0)
+      users.first.comments_count.should eq(2)
     end
     it "top_user should have more comments and posts than other_user" do
       top_user = User.top_rated.first
