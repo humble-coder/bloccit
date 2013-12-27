@@ -3,8 +3,10 @@ require 'spec_helper'
 describe User do
 
   describe "#role?" do
-    let(:member_user) { create(:user) }
-    let(:guest_user) { create(:user) { |user| user.update_attribute(:role, nil) } }
+    let(:guest_user) { build :user }
+    let(:member_user) { build :user, :as_member }
+    let(:moderator_user) { build :user, :as_moderator }
+    let(:admin_user) { build :user, :as_admin }
 
     it "should return false because member_user is not a moderator" do
       member_user.role?(:moderator).should be_false
@@ -18,11 +20,17 @@ describe User do
     it "should return false because guest_user is not a member in ROLES" do
       guest_user.role?(:member).should be_false
     end
+    it "should return true because moderator_user is a moderator" do
+      moderator_user.role?(:moderator).should be_true
+    end
+    it "should return true because admin_user is an admin" do
+      admin_user.role?(:admin).should be_true
+    end
   end
 
 
   describe "#favorited" do
-    let(:post) { create(:post) { |post| post.topic = create(:topic) } }
+    let(:post) { build :post }
     let(:user) { create(:user) { |user| user.favorites.create(post: post) } }
 
     it "should return true because user favorited post" do
@@ -32,7 +40,7 @@ describe User do
 
 
   describe "#voted" do
-    let(:post) { create(:post) { |post| post.topic = create(:topic) } }
+    let(:post) { build(:post) }
     let(:user) { create(:user) { |user| user.votes.create(post: post, value: 1) } }
 
     it "should return true because a user voted on post" do
@@ -43,45 +51,47 @@ describe User do
 
 
   describe ".top_rated" do
-    let!(:u0) { create(:user) do |user| 
-        post = user.posts.build(attributes_for(:post))
-        post.topic = create(:topic)
-        post.save
-        post.comments.build
-        c = user.comments.build(attributes_for(:comment))
-        c.post = post
-        c.save
-      end
-    }
+    # let!(:u0) { create(:user) do |user| 
+    #     post = user.posts.build(attributes_for(:post))
+    #     post.topic = create(:topic)
+    #     post.save
+    #     post.comments.build
+    #     c = user.comments.build(attributes_for(:comment))
+    #     c.post = post
+    #     c.save
+    #   end
+    # }
+    let!(:active_user) { create(:user_with_posts) }
+    let!(:passive_user) { create(:user) }
 
     #let(:post) { build :post, :with_comments }
     
-    let!(:u1) { create(:user) do |user| 
-        c = user.comments.build(attributes_for(:comment))
-        c.post = create(:post)
-        c.save
-        post = user.posts.build(attributes_for(:post))
-        post.topic = create(:topic)
-        post.save
-        c = user.comments.build(attributes_for(:comment))
-        c.post = post
-        c.save
-      end
-    }
+    # let!(:u1) { create(:user) do |user| 
+    #     c = user.comments.build(attributes_for(:comment))
+    #     c.post = create(:post)
+    #     c.save
+    #     post = user.posts.build(attributes_for(:post))
+    #     post.topic = create(:topic)
+    #     post.save
+    #     c = user.comments.build(attributes_for(:comment))
+    #     c.post = post
+    #     c.save
+    #   end
+    # }
 
     it "should return users based on comments + posts" do
-      User.top_rated.should eq([u1, u0])
+      User.top_rated.should eq([active_user, passive_user])
     end
     it "should have 'posts_count' on user" do
       users = User.top_rated
       users.first.posts_count.should eq(1)
     end
     it "should have user with most total posts and comments in the 0th index of top_rated array" do
-      User.top_rated[0].should eq(u1)
+      User.top_rated[0].should eq(active_user)
     end
     it "should have 'comments_count' on user" do
       users = User.top_rated
-      users.first.comments_count.should eq(2)
+      users.first.comments_count.should eq(0)
     end
     it "top_user should have more comments and posts than other_user" do
       top_user = User.top_rated.first
