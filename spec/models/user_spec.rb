@@ -40,7 +40,7 @@ describe User do
 
 
   describe "#voted" do
-    let(:post) { build(:post) }
+    let(:post) { build :post }
     let(:user) { create(:user) { |user| user.votes.create(post: post, value: 1) } }
 
     it "should return true because a user voted on post" do
@@ -51,29 +51,8 @@ describe User do
 
 
   describe ".top_rated" do
-    let!(:passive_user) { create(:user) do |user| 
-        post = user.posts.build(attributes_for(:post))
-        post.topic = create(:topic)
-        post.save
-        post.comments.build
-        c = user.comments.build(attributes_for(:comment))
-        c.post = post
-        c.save
-      end
-    }
-    
-    let!(:active_user) { create(:user) do |user| 
-        c = user.comments.build(attributes_for(:comment))
-        c.post = create(:post)
-        c.save
-        post = user.posts.build(attributes_for(:post))
-        post.topic = create(:topic)
-        post.save
-        c = user.comments.build(attributes_for(:comment))
-        c.post = post
-        c.save
-      end
-    }
+    let!(:passive_user) { create(:user_with_content, posts_count: 1, comments_count: 1) }
+    let!(:active_user) { create(:user_with_content, posts_count: 1, comments_count: 2) }
 
     it "should return users based on comments + posts" do
       User.top_rated.should eq([active_user, passive_user])
